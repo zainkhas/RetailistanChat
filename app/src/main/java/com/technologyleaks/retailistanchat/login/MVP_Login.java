@@ -1,5 +1,7 @@
 package com.technologyleaks.retailistanchat.login;
 import android.content.Context;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 /**
  * Created by Shahzore on 08-Feb-18.
@@ -29,6 +31,9 @@ public interface MVP_Login {
 
         void showToast(Toast toast);
 
+        void showProgress();
+
+        void hideProgress();
 
     }
 
@@ -41,6 +46,8 @@ public interface MVP_Login {
         void onDestroy(boolean isChangingConfiguration);
 
         void setView(PresenterToView view);
+
+        void onLoginButtonClicked(EditText editText_username, EditText editText_password, Button button_login);
 
     }
 

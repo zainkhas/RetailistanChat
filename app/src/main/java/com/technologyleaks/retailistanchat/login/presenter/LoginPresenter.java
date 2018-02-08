@@ -1,7 +1,8 @@
 package com.technologyleaks.retailistanchat.login.presenter;
 
 import android.content.Context;
-import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.technologyleaks.retailistanchat.login.MVP_Login;
@@ -121,5 +122,37 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
             return null;
         }
     }
+
+
+    /**
+     * Custom Methods
+     **/
+
+
+    @Override
+    public void onLoginButtonClicked(EditText editText_username, EditText editText_password, Button button_login) {
+
+        String errorMessage = "";
+        boolean isValid = false;
+
+        if (editText_username.getText().length() < 1) {
+            errorMessage = "Please enter Username!";
+        } else if (editText_password.getText().length() < 1) {
+            errorMessage = "Please enter Password!";
+        } else {
+            isValid = true;
+        }
+
+
+        if (isValid) {
+
+        } else {
+            getView().showToast(makeToast(errorMessage));
+        }
+
+    }
+
+
+
 
 }
