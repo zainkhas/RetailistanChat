@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.technologyleaks.retailistanchat.login.LoginActivity;
+import com.technologyleaks.retailistanchat.login.view.LoginActivity;
 import com.technologyleaks.retailistanchat.main.view.MainActivity;
 
 
