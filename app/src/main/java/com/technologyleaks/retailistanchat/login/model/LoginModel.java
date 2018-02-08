@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.beans.User;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
 
@@ -73,17 +74,17 @@ public class LoginModel implements MVP_Login.PresenterToModel {
                     if (mUsers.get(0).getPassword().equals(password)) {
                         mPresenter.onLoginSuccess();
                     } else {
-                        mPresenter.onLoginError("Incorrect password!");
+                        mPresenter.onLoginError(mPresenter.getAppContext().getString(R.string.incorrect_password));
                     }
                 } else {
-                    mPresenter.onLoginError("User does not exists!");
+                    mPresenter.onLoginError(mPresenter.getAppContext().getString(R.string.user_doesnt_exists));
                 }
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                mPresenter.onLoginError("Internet connection problem!");
+                mPresenter.onLoginError(mPresenter.getAppContext().getString(R.string.internet_connection_problem));
             }
         });
     }

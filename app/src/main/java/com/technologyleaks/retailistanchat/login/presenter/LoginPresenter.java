@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.commons.Navigator;
 import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
@@ -157,9 +158,9 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
         boolean isValid = false;
 
         if (username.length() < 1) {
-            errorMessage = "Please enter Username!";
+            errorMessage = getAppContext().getString(R.string.please_enter_username);
         } else if (editText_password.length() < 1) {
-            errorMessage = "Please enter Password!";
+            errorMessage = getAppContext().getString(R.string.please_enter_password);
         } else {
             isValid = true;
         }
