@@ -1,14 +1,14 @@
 package com.technologyleaks.retailistanchat.login.presenter;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.technologyleaks.retailistanchat.beans.User;
+import com.technologyleaks.retailistanchat.commons.Navigator;
+import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
 
 import java.lang.ref.WeakReference;
@@ -130,6 +130,17 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
         }
     }
 
+    @Override
+    public void onLoginError(String errorMessage) {
+        getView().showToast(makeToast(errorMessage));
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        SharedPrefs.setIsLoggedIn(true);
+        Navigator.navigate(getActivityContext(), Navigator.SCREEN.MAIN, true);
+    }
+
 
     /**
      * Custom Methods
@@ -139,12 +150,15 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
     @Override
     public void onLoginButtonClicked(EditText editText_username, EditText editText_password, Button button_login) {
 
+        String username = editText_username.getText().toString();
+        final String password = editText_password.getText().toString();
+
         String errorMessage = "";
         boolean isValid = false;
 
-        if (editText_username.getText().length() < 1) {
+        if (username.length() < 1) {
             errorMessage = "Please enter Username!";
-        } else if (editText_password.getText().length() < 1) {
+        } else if (editText_password.length() < 1) {
             errorMessage = "Please enter Password!";
         } else {
             isValid = true;
@@ -152,17 +166,12 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
 
 
         if (isValid) {
-            String userId = mDatabase.push().getKey();
-            Log.d(TAG, "User id is: " + userId);
-            User user = new User(editText_username.getText().toString(), editText_password.getText().toString());
-            mDatabase.child(userId).setValue(user);
+            mModel.performLogin(username, password);
         } else {
             getView().showToast(makeToast(errorMessage));
         }
 
     }
-
-
 
 
 }

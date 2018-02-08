@@ -5,8 +5,20 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class User {
 
+    //Table Name
+    public static final String TABLENAME = "users";
+
+
+    //Columns
+    public static final String COLUMN_USERNAME = "username";
+    public static final String COLUMN_PASSWORD = "password";
+
     public String username;
     public String password;
+
+
+    public User() {
+    }
 
     public User(String username, String password) {
         this.username = username;

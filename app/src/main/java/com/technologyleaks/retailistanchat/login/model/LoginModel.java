@@ -1,6 +1,16 @@
 package com.technologyleaks.retailistanchat.login.model;
 
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.technologyleaks.retailistanchat.beans.User;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
+
+import java.util.ArrayList;
 
 /**
  * Created by Shahzore on 08-Feb-18.
@@ -35,6 +45,47 @@ public class LoginModel implements MVP_Login.PresenterToModel {
         if (!isChangingConfiguration) {
             mPresenter = null;
         }
+    }
+
+    @Override
+    public void performLogin(String username, final String password) {
+        Query userNameCheckQuery = FirebaseDatabase.getInstance().getReference()
+                .child(User.TABLENAME)
+                .orderByChild(User.COLUMN_USERNAME)
+                .equalTo(username)
+                .limitToFirst(1);
+
+
+        userNameCheckQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d(TAG, "Username query count: " + dataSnapshot.getChildrenCount());
+
+                ArrayList<User> mUsers = new ArrayList<>();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    mUsers.add(snapshot.getValue(User.class));
+                }
+
+
+                if (mUsers.size() > 0) {
+                    if (mUsers.get(0).getPassword().equals(password)) {
+                        mPresenter.onLoginSuccess();
+                    } else {
+                        mPresenter.onLoginError("Incorrect password!");
+                    }
+                } else {
+                    mPresenter.onLoginError("User does not exists!");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                mPresenter.onLoginError("Internet connection problem!");
+            }
+        });
     }
 
 

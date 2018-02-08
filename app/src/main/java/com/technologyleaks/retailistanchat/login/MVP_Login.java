@@ -60,6 +60,10 @@ public interface MVP_Login {
         Context getAppContext();
 
         Context getActivityContext();
+
+        void onLoginError(String errorMessage);
+
+        void onLoginSuccess();
     }
 
     /**
@@ -70,6 +74,8 @@ public interface MVP_Login {
     interface PresenterToModel {
 
         void onDestroy(boolean isChangingConfiguration);
+
+        void performLogin(String username, String password);
 
     }
 }
