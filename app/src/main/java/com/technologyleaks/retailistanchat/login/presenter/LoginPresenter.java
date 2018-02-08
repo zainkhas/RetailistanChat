@@ -1,10 +1,14 @@
 package com.technologyleaks.retailistanchat.login.presenter;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.technologyleaks.retailistanchat.beans.User;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
 
 import java.lang.ref.WeakReference;
@@ -15,8 +19,10 @@ import java.lang.ref.WeakReference;
 
 public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.ModelToPresenter {
 
-
     private static final String TAG = LoginPresenter.class.getSimpleName();
+
+    private DatabaseReference mDatabase;
+
 
     // View reference. We use as a WeakReference
     // because the Activity could be destroyed at any time
@@ -32,6 +38,7 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
      */
     public LoginPresenter(MVP_Login.PresenterToView view) {
         mView = new WeakReference<>(view);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     /**
@@ -145,7 +152,10 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
 
 
         if (isValid) {
-
+            String userId = mDatabase.push().getKey();
+            Log.d(TAG, "User id is: " + userId);
+            User user = new User(editText_username.getText().toString(), editText_password.getText().toString());
+            mDatabase.child(userId).setValue(user);
         } else {
             getView().showToast(makeToast(errorMessage));
         }
