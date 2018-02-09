@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "893689867565-omn19vcv1gaa95o0sb1hu93keo0fpukt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technologyleaks.retailistanchat",
+            "certificate_hash": "21337e6aeea64bf48936466493bd67d43fc9f383"
+          }
+        },
+        {
           "client_id": "893689867565-sft2cca83277bludm636ege30u8oru70.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893689867565-sft2cca83277bludm636ege30u8oru70.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
