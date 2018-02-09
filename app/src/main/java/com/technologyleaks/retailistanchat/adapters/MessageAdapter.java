@@ -15,12 +15,13 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.beans.Message;
+import com.technologyleaks.retailistanchat.commons.CustomMethods;
 import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdapter.MessageViewHolder> {
+public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdapter.MessageViewHolder>  {
 
     /**
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
@@ -56,6 +57,8 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdap
         TextView textView_userName;
         @BindView(R.id.textView_message)
         TextView textView_message;
+        @BindView(R.id.textView_time)
+        TextView textView_time;
         @BindView(R.id.layout_innerContainer)
         RelativeLayout layout_innerContainer;
 
@@ -73,6 +76,7 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdap
                 textView_message.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_bubble_sent));
                 textView_message.setTextColor(ContextCompat.getColor(context, R.color.colorLightText));
                 textView_userName.setVisibility(View.GONE);
+
             } else {
                 layout_innerContainer.setGravity(Gravity.START);
                 textView_message.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_bubble_received));
@@ -82,6 +86,8 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdap
 
 
             textView_userName.setText(message.getSenderName());
+            textView_userName.setText(message.getSenderName());
+            textView_time.setText(CustomMethods.getTimeAgo(Long.valueOf(message.getTime())));
             textView_message.setText(message.getText());
         }
     }

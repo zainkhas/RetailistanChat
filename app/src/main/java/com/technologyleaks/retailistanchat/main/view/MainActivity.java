@@ -1,5 +1,6 @@
 package com.technologyleaks.retailistanchat.main.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -41,6 +45,7 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected ImageButton button_send;
     @BindView(R.id.recyclerView)
     protected RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +139,22 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
 
             }
         });
+        editTex_message.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // hide virtual keyboard
+                hideKeyboard(editTex_message);
+                mPresenter.onButtonSendClicked(editTex_message);
+                button_send.setClickable(false);
+                button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background_disabled));
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 
