@@ -4,11 +4,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_register_login">RegisterActivity</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="please_enter_username">Please enter Username!</string>
     <string name="please_enter_password">Please enter Password!</string>
+    <string name="please_re_enter_password">Please re-enter Password!</string>
+    <string name="register">Register</string>
     <string name="incorrect_password">Incorrect password!</string>
     <string name="user_doesnt_exists">User does not exists!</string>
     <string name="internet_connection_problem">Internet connection problem!</string>

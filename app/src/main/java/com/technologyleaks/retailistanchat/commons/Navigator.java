@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.technologyleaks.retailistanchat.login.view.LoginActivity;
 import com.technologyleaks.retailistanchat.main.view.MainActivity;
+import com.technologyleaks.retailistanchat.register.view.RegisterActivity;
 
 
 /**
@@ -62,6 +63,9 @@ public class Navigator {
             case LOGIN:
                 activity = LoginActivity.class;
                 break;
+            case REGISTER:
+                activity = RegisterActivity.class;
+                break;
         }
 
         return activity;
@@ -70,7 +74,8 @@ public class Navigator {
     //Lis of Screens
     public enum SCREEN {
         MAIN,
-        LOGIN
+        LOGIN,
+        REGISTER
     }
 
 

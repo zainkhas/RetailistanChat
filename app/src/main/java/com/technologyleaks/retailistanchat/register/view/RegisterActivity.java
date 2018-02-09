@@ -1,4 +1,7 @@
-package com.technologyleaks.retailistanchat.login.view;
+package com.technologyleaks.retailistanchat.register.view;
+
+import com.technologyleaks.retailistanchat.R;
+import com.technologyleaks.retailistanchat.base.view.BaseActivity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,14 +13,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
-import com.technologyleaks.retailistanchat.base.view.BaseActivity;
-import com.technologyleaks.retailistanchat.commons.Navigator;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
 import com.technologyleaks.retailistanchat.login.model.LoginModel;
 import com.technologyleaks.retailistanchat.login.presenter.LoginPresenter;
+import com.technologyleaks.retailistanchat.register.MVP_Register;
+import com.technologyleaks.retailistanchat.register.model.RegisterModel;
+import com.technologyleaks.retailistanchat.register.presenter.RegisterPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,23 +30,24 @@ import butterknife.OnClick;
  * Created by Shahzore on 08-Feb-18.
  */
 
-public class LoginActivity extends AppCompatActivity implements MVP_Login.PresenterToView {
+public class RegisterActivity extends AppCompatActivity implements MVP_Register.PresenterToView {
 
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String TAG = RegisterActivity.class.getSimpleName();
 
     private final StateMaintainer mStateMaintainer =
             new StateMaintainer(getSupportFragmentManager(), BaseActivity.class.getName());
 
 
     /* Presenter */
-    private MVP_Login.ViewToPresenter mPresenter;
-
+    private MVP_Register.ViewToPresenter mPresenter;
 
     /* Views */
     @BindView(R.id.editText_username)
     protected EditText editText_username;
-    @BindView(R.id.editText_password)
-    protected EditText editText_password;
+    @BindView(R.id.editText_type_password)
+    protected EditText editText_type_password;
+    @BindView(R.id.editText_re_type_password)
+    protected EditText editText_re_type_password;
     @BindView(R.id.button_login)
     protected Button button_login;
     @BindView(R.id.progressLayout)
@@ -51,11 +55,11 @@ public class LoginActivity extends AppCompatActivity implements MVP_Login.Presen
     @BindView(R.id.contentLayout)
     protected LinearLayout contentLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+        setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         setUpViews();
         setUpMVP();
@@ -68,9 +72,9 @@ public class LoginActivity extends AppCompatActivity implements MVP_Login.Presen
         // Check if StateMaintainer has been created
         if (mStateMaintainer.firstTimeIn() || mStateMaintainer.wasRecreated()) {
             // Create the Presenter
-            LoginPresenter presenter = new LoginPresenter(this);
+            RegisterPresenter presenter = new RegisterPresenter(this);
             // Create the Model
-            LoginModel model = new LoginModel(presenter);
+            RegisterModel model = new RegisterModel(presenter);
             // Set Presenter model
             presenter.setModel(model);
             // Add Presenter and Model to StateMaintainer
@@ -118,9 +122,7 @@ public class LoginActivity extends AppCompatActivity implements MVP_Login.Presen
 
     @OnClick(R.id.button_login)
     void onLoginButtonClicked() {
-//        mPresenter.onLoginButtonClicked(editText_username, editText_password, button_login);
-        Navigator.navigate(getActivityContext(), Navigator.SCREEN.REGISTER);
+        mPresenter.onLoginButtonClicked(editText_username, editText_type_password, editText_re_type_password, button_login);
     }
-
 
 }
