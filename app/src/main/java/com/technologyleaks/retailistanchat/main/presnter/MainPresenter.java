@@ -1,8 +1,16 @@
 package com.technologyleaks.retailistanchat.main.presnter;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.technologyleaks.retailistanchat.adapters.MessageAdapter;
+import com.technologyleaks.retailistanchat.beans.Message;
 import com.technologyleaks.retailistanchat.commons.Navigator;
 import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
@@ -14,6 +22,12 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
 
 
     private static final String TAG = MainPresenter.class.getSimpleName();
+
+    private static final Query sChatQuery =
+            FirebaseDatabase.getInstance().getReference().child(Message.TABLENAME).limitToLast(50);
+
+    private MessageAdapter adapter;
+
 
     // View reference. We use as a WeakReference
     // because the Activity could be destroyed at any time
@@ -120,6 +134,11 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
         }
     }
 
+    @Override
+    public void onMessageSend() {
+        getView().clearMessage();
+    }
+
 
     /**
      * Custom Methods
@@ -131,6 +150,41 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
         if (!SharedPrefs.isLoggedIn()) {
             Navigator.navigate(getActivityContext(), Navigator.SCREEN.LOGIN, true);
         }
+    }
+
+    @Override
+    public void onButtonSendClicked(EditText editText_message) {
+        String message = editText_message.getText().toString();
+
+        if (message.length() > 0) {
+            mModel.sendMessage(message);
+        }
+    }
+
+    @Override
+    public void populateRecyclerView(final RecyclerView recyclerView, LifecycleOwner lifecycleOwner) {
+
+        if (adapter == null) {
+            FirebaseRecyclerOptions<Message> options =
+                    new FirebaseRecyclerOptions.Builder<Message>()
+                            .setQuery(sChatQuery, Message.class)
+                            .setLifecycleOwner(lifecycleOwner)
+                            .build();
+
+            adapter = new MessageAdapter(getActivityContext(), options);
+
+
+            // Scroll to bottom on new messages
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                }
+            });
+
+            recyclerView.setAdapter(adapter);
+        }
+
     }
 
 }

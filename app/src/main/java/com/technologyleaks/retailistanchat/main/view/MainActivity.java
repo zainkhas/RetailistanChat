@@ -1,16 +1,27 @@
 package com.technologyleaks.retailistanchat.main.view;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
 import com.technologyleaks.retailistanchat.base.view.BaseActivity;
+import com.technologyleaks.retailistanchat.commons.CustomMethods;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
 import com.technologyleaks.retailistanchat.main.model.MainModel;
 import com.technologyleaks.retailistanchat.main.presnter.MainPresenter;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements MVP_Main.PresenterToView {
 
@@ -23,11 +34,20 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     /* Presenter */
     private MVP_Main.ViewToPresenter mPresenter;
 
+    /* Views */
+    @BindView(R.id.editTex_message)
+    protected EditText editTex_message;
+    @BindView(R.id.button_send)
+    protected ImageButton button_send;
+    @BindView(R.id.recyclerView)
+    protected RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setUpViews();
         setUpMVP();
 
     }
@@ -36,6 +56,7 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected void onResume() {
         super.onResume();
         mPresenter.checkLogin();
+        mPresenter.populateRecyclerView(recyclerView, this);
     }
 
     @Override
@@ -87,4 +108,45 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         }
     }
 
+    private void setUpViews() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        editTex_message.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    button_send.setClickable(true);
+                    button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background));
+                } else {
+                    button_send.setClickable(false);
+                    button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background_disabled));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+
+    @OnClick(R.id.button_send)
+    void onButtonSendClicked() {
+        mPresenter.onButtonSendClicked(editTex_message);
+    }
+
+    @Override
+    public void clearMessage() {
+        editTex_message.setText("");
+        editTex_message.clearFocus();
+        button_send.setClickable(false);
+        button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background));
+        CustomMethods.hideSoftKeyboardDialogDismiss(this);
+    }
 }

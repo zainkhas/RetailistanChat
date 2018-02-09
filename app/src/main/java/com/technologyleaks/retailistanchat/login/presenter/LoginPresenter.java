@@ -137,8 +137,10 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
     }
 
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String userId, String userName) {
         SharedPrefs.setIsLoggedIn(true);
+        SharedPrefs.setUserId(userId);
+        SharedPrefs.setUserName(userName);
         Navigator.navigate(getActivityContext(), Navigator.SCREEN.MAIN, true);
     }
 

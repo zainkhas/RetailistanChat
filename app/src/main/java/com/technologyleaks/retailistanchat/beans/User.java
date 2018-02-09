@@ -1,5 +1,6 @@
 package com.technologyleaks.retailistanchat.beans;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -13,8 +14,10 @@ public class User {
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_PASSWORD = "password";
 
-    public String username;
-    public String password;
+    @Exclude
+    private String key;
+    private String username;
+    private String password;
 
 
     public User() {
@@ -39,5 +42,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

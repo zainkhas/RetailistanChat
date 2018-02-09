@@ -12,4 +12,5 @@
     <string name="incorrect_password">Incorrect password!</string>
     <string name="user_doesnt_exists">User does not exists!</string>
     <string name="internet_connection_problem">Internet connection problem!</string>
+    <string name="enter_message">Enter message</string>
 </resources>

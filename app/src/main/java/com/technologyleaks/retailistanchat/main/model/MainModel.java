@@ -1,5 +1,9 @@
 package com.technologyleaks.retailistanchat.main.model;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.technologyleaks.retailistanchat.beans.Message;
+import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
 
 public class MainModel implements MVP_Main.PresenterToModel {
@@ -9,6 +13,7 @@ public class MainModel implements MVP_Main.PresenterToModel {
 
     // Presenter reference
     private MVP_Main.ModelToPresenter mPresenter;
+    private DatabaseReference mChatIndicesRef;
 
 
     /**
@@ -18,6 +23,8 @@ public class MainModel implements MVP_Main.PresenterToModel {
      */
     public MainModel(MVP_Main.ModelToPresenter presenter) {
         this.mPresenter = presenter;
+        this.mChatIndicesRef = FirebaseDatabase.getInstance()
+                .getReference(Message.TABLENAME);
     }
 
 
@@ -31,6 +38,22 @@ public class MainModel implements MVP_Main.PresenterToModel {
         if (!isChangingConfiguration) {
             mPresenter = null;
         }
+    }
+
+    @Override
+    public void sendMessage(String message) {
+
+        String messageId = mChatIndicesRef.push().getKey();
+
+        Message messageObj = new Message();
+        messageObj.setText(message);
+        messageObj.setUserId(SharedPrefs.getUserId());
+        messageObj.setTime(String.valueOf(System.currentTimeMillis()));
+        messageObj.setSenderName(SharedPrefs.getUserName());
+
+        mChatIndicesRef.child(messageId).setValue(messageObj);
+        mPresenter.onMessageSend();
+
     }
 
 

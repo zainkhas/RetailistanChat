@@ -49,7 +49,7 @@ public class LoginModel implements MVP_Login.PresenterToModel {
     }
 
     @Override
-    public void performLogin(String username, final String password) {
+    public void performLogin(final String username, final String password) {
         Query userNameCheckQuery = FirebaseDatabase.getInstance().getReference()
                 .child(User.TABLENAME)
                 .orderByChild(User.COLUMN_USERNAME)
@@ -66,13 +66,19 @@ public class LoginModel implements MVP_Login.PresenterToModel {
                 ArrayList<User> mUsers = new ArrayList<>();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mUsers.add(snapshot.getValue(User.class));
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        user.setKey(snapshot.getKey());
+                        Log.d(TAG, "key is " + user.getKey());
+                    }
+                    mUsers.add(user);
                 }
 
 
                 if (mUsers.size() > 0) {
-                    if (mUsers.get(0).getPassword().equals(password)) {
-                        mPresenter.onLoginSuccess();
+                    User user = mUsers.get(0);
+                    if (user.getPassword().equals(password)) {
+                        mPresenter.onLoginSuccess(user.getKey(), user.getUsername());
                     } else {
                         mPresenter.onLoginError(mPresenter.getAppContext().getString(R.string.incorrect_password));
                     }

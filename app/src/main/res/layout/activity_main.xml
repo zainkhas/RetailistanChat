@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@android:color/white"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_compose" />
+
+    <RelativeLayout
+        android:id="@+id/layout_compose"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This is main content" />
+        android:layout_alignParentBottom="true"
+        android:padding="5dp">
+
+        <EditText
+            android:id="@+id/editTex_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/button_send"
+            android:layout_toStartOf="@id/button_send"
+            android:hint="@string/enter_message" />
+
+        <ImageButton
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/send_button_background_disabled"
+            android:padding="10dp"
+            android:clickable="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_send_black_24dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

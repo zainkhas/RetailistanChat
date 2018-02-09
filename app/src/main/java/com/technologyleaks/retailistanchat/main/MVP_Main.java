@@ -1,6 +1,9 @@
 package com.technologyleaks.retailistanchat.main;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -27,6 +30,8 @@ public interface MVP_Main {
 
         void showToast(Toast toast);
 
+        void clearMessage();
+
 
     }
 
@@ -42,6 +47,10 @@ public interface MVP_Main {
 
         void checkLogin();
 
+        void onButtonSendClicked(EditText editText_message);
+
+        void populateRecyclerView(RecyclerView recyclerView, LifecycleOwner lifecycleOwner);
+
     }
 
     /**
@@ -53,6 +62,8 @@ public interface MVP_Main {
         Context getAppContext();
 
         Context getActivityContext();
+
+        void onMessageSend();
     }
 
     /**
@@ -63,6 +74,8 @@ public interface MVP_Main {
     interface PresenterToModel {
 
         void onDestroy(boolean isChangingConfiguration);
+
+        void sendMessage(String message);
 
     }
 }

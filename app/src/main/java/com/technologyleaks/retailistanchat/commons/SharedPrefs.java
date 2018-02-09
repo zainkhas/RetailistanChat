@@ -10,6 +10,8 @@ public class SharedPrefs {
 
     /* Constants */
     private static final String IS_LOGGED_IN = "IS_LOGGED_IN";
+    private static final String USER_ID = "USER_ID";
+    private static final String USER_NAME = "USER_NAME";
 
 
     public static boolean isLoggedIn() {
@@ -18,6 +20,23 @@ public class SharedPrefs {
 
     public static void setIsLoggedIn(boolean value) {
         Prefs.putBoolean(IS_LOGGED_IN, value);
+    }
+
+
+    public static String getUserId() {
+        return Prefs.getString(USER_ID, "");
+    }
+
+    public static void setUserId(String value) {
+        Prefs.putString(USER_ID, value);
+    }
+
+    public static String getUserName() {
+        return Prefs.getString(USER_NAME, "");
+    }
+
+    public static void setUserName(String value) {
+        Prefs.putString(USER_NAME, value);
     }
 
 }
