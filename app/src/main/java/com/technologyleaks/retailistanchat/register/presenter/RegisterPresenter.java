@@ -1,12 +1,11 @@
 package com.technologyleaks.retailistanchat.register.presenter;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.technologyleaks.retailistanchat.beans.User;
+import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.commons.Navigator;
 import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.register.MVP_Register;
@@ -93,7 +92,7 @@ public class RegisterPresenter implements MVP_Register.ViewToPresenter, MVP_Regi
     }
 
     @Override
-    public void onLoginButtonClicked(EditText editText_username, EditText editText_type_password, EditText editText_re_type_password, Button button_login) {
+    public void onRegisterButtonClicked(EditText editText_username, EditText editText_type_password, EditText editText_re_type_password, Button button_login) {
 
         String errorMessage = "";
         String userName = "";
@@ -119,7 +118,9 @@ public class RegisterPresenter implements MVP_Register.ViewToPresenter, MVP_Regi
         }
 
 
+
         if (isValid) {
+            getView().showProgress();
             mModel.saveRegisterData(userName, userPassword);
         } else {
             getView().showToast(makeToast(errorMessage));
@@ -137,16 +138,22 @@ public class RegisterPresenter implements MVP_Register.ViewToPresenter, MVP_Regi
     }
 
     @Override
-    public void onLoginError(String errorMessage) {
+    public void onRegisterError(String errorMessage) {
         getView().showToast(makeToast(errorMessage));
     }
 
     @Override
-    public void onLoginSuccess(String userId, String userName) {
+    public void onRegisterSuccess(String userId, String userName) {
         SharedPrefs.setIsLoggedIn(true);
         SharedPrefs.setUserId(userId);
         SharedPrefs.setUserName(userName);
+        getView().showToast(makeToast(getAppContext().getString(R.string.registration_successful)));
         Navigator.navigate(getActivityContext(), Navigator.SCREEN.MAIN, true);
+    }
+
+    @Override
+    public void onResponse() {
+        getView().hideProgress();
     }
 
     @Override

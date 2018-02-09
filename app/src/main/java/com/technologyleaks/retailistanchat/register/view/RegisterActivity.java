@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity implements MVP_Register.
 
     @OnClick(R.id.button_register)
     void onLoginButtonClicked() {
-        mPresenter.onLoginButtonClicked(editText_username, editText_type_password, editText_re_type_password, button_register);
+        mPresenter.onRegisterButtonClicked(editText_username, editText_type_password, editText_re_type_password, button_register);
     }
 
 }

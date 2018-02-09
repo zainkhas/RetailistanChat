@@ -63,6 +63,8 @@ public class LoginModel implements MVP_Login.PresenterToModel {
 
                 Log.d(TAG, "Username query count: " + dataSnapshot.getChildrenCount());
 
+                mPresenter.onResponse();
+
                 ArrayList<User> mUsers = new ArrayList<>();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -90,6 +92,7 @@ public class LoginModel implements MVP_Login.PresenterToModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                mPresenter.onResponse();
                 mPresenter.onLoginError(mPresenter.getAppContext().getString(R.string.internet_connection_problem));
             }
         });

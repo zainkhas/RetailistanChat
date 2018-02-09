@@ -1,8 +1,6 @@
 package com.technologyleaks.retailistanchat.register.model;
 
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,21 +50,24 @@ public class RegisterModel implements MVP_Register.PresenterToModel {
         userNameCheckQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mPresenter.onResponse();
                 count = dataSnapshot.getChildrenCount();
                 if (count > 0) {
-                    mPresenter.onLoginError(mPresenter.getAppContext().getString(R.string.user_doesnt_exists));
+                    mPresenter.onRegisterError(mPresenter.getAppContext().getString(R.string.username_already_taken));
                 } else {
                     String userId = mDatabase.push().getKey();
                     Log.d(TAG, "User id is: " + userId);
                     User user = new User(userName, password);
                     mDatabase.child(userId).setValue(user);
-                    mPresenter.onLoginSuccess(userId, userName);
+                    mPresenter.onRegisterSuccess(userId, userName);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getDetails());
+                mPresenter.onResponse();
+                mPresenter.onRegisterError(mPresenter.getAppContext().getString(R.string.internet_connection_problem));
             }
         });
 

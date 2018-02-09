@@ -50,7 +50,7 @@ public interface MVP_Register {
 
         void setView(PresenterToView view);
 
-        void onLoginButtonClicked(EditText editText_username, EditText editText_type_password, EditText editText_re_type_password, Button button_login);
+        void onRegisterButtonClicked(EditText editText_username, EditText editText_type_password, EditText editText_re_type_password, Button button_login);
 
 
     }
@@ -65,9 +65,12 @@ public interface MVP_Register {
 
         Context getActivityContext();
 
-        void onLoginError(String errorMessage);
+        void onRegisterError(String errorMessage);
 
-        void onLoginSuccess(String userId, String userName);
+        void onRegisterSuccess(String userId, String userName);
+
+        void onResponse();
+
 
     }
 

@@ -144,6 +144,11 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
         Navigator.navigate(getActivityContext(), Navigator.SCREEN.MAIN, true);
     }
 
+    @Override
+    public void onResponse() {
+        getView().hideProgress();
+    }
+
 
     /**
      * Custom Methods
@@ -169,6 +174,7 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
 
 
         if (isValid) {
+            getView().showProgress();
             mModel.performLogin(username, password);
         } else {
             getView().showToast(makeToast(errorMessage));

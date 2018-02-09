@@ -66,6 +66,8 @@ public interface MVP_Login {
         void onLoginError(String errorMessage);
 
         void onLoginSuccess(String userId, String userName);
+
+        void onResponse();
     }
 
     /**
