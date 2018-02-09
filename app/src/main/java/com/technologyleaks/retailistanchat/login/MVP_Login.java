@@ -49,6 +49,8 @@ public interface MVP_Login {
 
         void onLoginButtonClicked(EditText editText_username, EditText editText_password, Button button_login);
 
+        void onRegisterClicked();
+
     }
 
     /**

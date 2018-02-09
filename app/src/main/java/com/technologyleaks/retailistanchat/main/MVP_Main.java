@@ -51,6 +51,8 @@ public interface MVP_Main {
 
         void populateRecyclerView(RecyclerView recyclerView, LifecycleOwner lifecycleOwner);
 
+        void onMenuLogoutSelected();
+
     }
 
     /**

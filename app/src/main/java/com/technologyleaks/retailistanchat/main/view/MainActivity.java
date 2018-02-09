@@ -74,7 +74,8 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            mPresenter.onMenuLogoutSelected();
             return true;
         }
 
@@ -148,5 +149,11 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         button_send.setClickable(false);
         button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background));
         CustomMethods.hideSoftKeyboardDialogDismiss(this);
+    }
+
+
+    @Override
+    protected boolean useDrawerToggle() {
+        return false;
     }
 }

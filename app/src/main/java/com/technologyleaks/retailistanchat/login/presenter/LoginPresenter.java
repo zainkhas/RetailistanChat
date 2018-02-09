@@ -176,5 +176,10 @@ public class LoginPresenter implements MVP_Login.ViewToPresenter, MVP_Login.Mode
 
     }
 
+    @Override
+    public void onRegisterClicked() {
+        Navigator.navigate(getActivityContext(), Navigator.SCREEN.REGISTER);
+    }
+
 
 }

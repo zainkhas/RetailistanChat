@@ -1,19 +1,19 @@
 package com.technologyleaks.retailistanchat.login.view;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
 import com.technologyleaks.retailistanchat.base.view.BaseActivity;
-import com.technologyleaks.retailistanchat.commons.Navigator;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
 import com.technologyleaks.retailistanchat.login.MVP_Login;
 import com.technologyleaks.retailistanchat.login.model.LoginModel;
@@ -49,7 +49,8 @@ public class LoginActivity extends AppCompatActivity implements MVP_Login.Presen
     @BindView(R.id.progressLayout)
     protected FrameLayout progressLayout;
     @BindView(R.id.contentLayout)
-    protected LinearLayout contentLayout;
+    protected RelativeLayout contentLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,11 @@ public class LoginActivity extends AppCompatActivity implements MVP_Login.Presen
     }
 
     private void setUpViews() {
+
+        AnimationDrawable animationDrawable = (AnimationDrawable) button_login.getBackground();
+        animationDrawable.setEnterFadeDuration(2000);
+        animationDrawable.setExitFadeDuration(4000);
+        animationDrawable.start();
     }
 
     private void setUpMVP() {
@@ -118,8 +124,12 @@ public class LoginActivity extends AppCompatActivity implements MVP_Login.Presen
 
     @OnClick(R.id.button_login)
     void onLoginButtonClicked() {
-//        mPresenter.onLoginButtonClicked(editText_username, editText_password, button_login);
-        Navigator.navigate(getActivityContext(), Navigator.SCREEN.REGISTER);
+        mPresenter.onLoginButtonClicked(editText_username, editText_password, button_login);
+    }
+
+    @OnClick(R.id.textView_register)
+    void onRegisterClicked() {
+        mPresenter.onRegisterClicked();
     }
 
 

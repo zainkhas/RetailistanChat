@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.adapters.MessageAdapter;
 import com.technologyleaks.retailistanchat.beans.Message;
 import com.technologyleaks.retailistanchat.commons.Navigator;
@@ -185,6 +186,15 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
             recyclerView.setAdapter(adapter);
         }
 
+    }
+
+    @Override
+    public void onMenuLogoutSelected() {
+        SharedPrefs.setUserName("");
+        SharedPrefs.setUserId("");
+        SharedPrefs.setIsLoggedIn(false);
+        getView().showToast(makeToast(getAppContext().getString(R.string.logged_out_success)));
+        Navigator.navigate(getActivityContext(), Navigator.SCREEN.LOGIN, true);
     }
 
 }

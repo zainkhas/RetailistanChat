@@ -3,12 +3,8 @@
     android:shape="rectangle">
 
     <!-- View background color -->
-    <gradient
-        android:angle="180"
-        android:endColor="#3498db"
-        android:startColor="#8e44ad"
-        android:type="linear" />
+    <solid android:color="#ecf0f1" />
 
     <!-- The radius makes the corners rounded -->
-    <corners android:radius="20dp" />
+    <corners android:radius="15dp" />
 </shape>

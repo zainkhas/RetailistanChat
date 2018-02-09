@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
+                app:titleTextColor="@color/colorTitleText"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.AppBarLayout>
@@ -50,6 +51,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/colorTitleText"
+        app:itemTextColor="@color/colorTitleText"
         android:fitsSystemWindows="true">
 
         <include layout="@layout/layout_navigation_drawer" />

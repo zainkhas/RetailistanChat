@@ -1,9 +1,7 @@
 package com.technologyleaks.retailistanchat.register.view;
 
-import com.technologyleaks.retailistanchat.R;
-import com.technologyleaks.retailistanchat.base.view.BaseActivity;
-
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,11 +11,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
+import com.technologyleaks.retailistanchat.base.view.BaseActivity;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
-import com.technologyleaks.retailistanchat.login.MVP_Login;
-import com.technologyleaks.retailistanchat.login.model.LoginModel;
-import com.technologyleaks.retailistanchat.login.presenter.LoginPresenter;
 import com.technologyleaks.retailistanchat.register.MVP_Register;
 import com.technologyleaks.retailistanchat.register.model.RegisterModel;
 import com.technologyleaks.retailistanchat.register.presenter.RegisterPresenter;
@@ -48,8 +45,8 @@ public class RegisterActivity extends AppCompatActivity implements MVP_Register.
     protected EditText editText_type_password;
     @BindView(R.id.editText_re_type_password)
     protected EditText editText_re_type_password;
-    @BindView(R.id.button_login)
-    protected Button button_login;
+    @BindView(R.id.button_register)
+    protected Button button_register;
     @BindView(R.id.progressLayout)
     protected FrameLayout progressLayout;
     @BindView(R.id.contentLayout)
@@ -66,6 +63,10 @@ public class RegisterActivity extends AppCompatActivity implements MVP_Register.
     }
 
     private void setUpViews() {
+        AnimationDrawable animationDrawable = (AnimationDrawable) button_register.getBackground();
+        animationDrawable.setEnterFadeDuration(2000);
+        animationDrawable.setExitFadeDuration(4000);
+        animationDrawable.start();
     }
 
     private void setUpMVP() {
@@ -120,9 +121,9 @@ public class RegisterActivity extends AppCompatActivity implements MVP_Register.
         progressLayout.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.button_login)
+    @OnClick(R.id.button_register)
     void onLoginButtonClicked() {
-        mPresenter.onLoginButtonClicked(editText_username, editText_type_password, editText_re_type_password, button_login);
+        mPresenter.onLoginButtonClicked(editText_username, editText_type_password, editText_re_type_password, button_register);
     }
 
 }
