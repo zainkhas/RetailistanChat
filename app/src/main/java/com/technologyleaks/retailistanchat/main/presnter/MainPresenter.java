@@ -157,8 +157,8 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
     public void onButtonSendClicked(EditText editText_message) {
         String message = editText_message.getText().toString();
 
-        if (message.length() > 0) {
-            mModel.sendMessage(message);
+        if (message.trim().length() > 0) {
+            mModel.sendMessage(message.trim());
         }
     }
 
