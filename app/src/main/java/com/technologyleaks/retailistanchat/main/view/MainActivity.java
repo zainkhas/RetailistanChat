@@ -67,6 +67,25 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         mPresenter.populateRecyclerView(recyclerView, this);
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.takeOnline();
+    }
+
+    @Override
+    protected void onStop() {
+        mPresenter.takeOffline();
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        mPresenter.takeOffline();
+        super.onPause();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

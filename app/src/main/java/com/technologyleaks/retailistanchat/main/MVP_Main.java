@@ -53,6 +53,10 @@ public interface MVP_Main {
 
         void onMenuLogoutSelected();
 
+        void takeOnline();
+
+        void takeOffline();
+
     }
 
     /**

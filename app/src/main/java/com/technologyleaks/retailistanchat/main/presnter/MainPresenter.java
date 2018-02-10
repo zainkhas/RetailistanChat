@@ -27,6 +27,7 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
     private static final Query sChatQuery =
             FirebaseDatabase.getInstance().getReference().child(Message.TABLENAME).limitToLast(50);
 
+
     private MessageAdapter adapter;
 
 
@@ -195,6 +196,16 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
         SharedPrefs.setIsLoggedIn(false);
         getView().showToast(makeToast(getAppContext().getString(R.string.logged_out_success)));
         Navigator.navigate(getActivityContext(), Navigator.SCREEN.LOGIN, true);
+    }
+
+    @Override
+    public void takeOnline() {
+
+    }
+
+    @Override
+    public void takeOffline() {
+
     }
 
 }
