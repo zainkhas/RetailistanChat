@@ -174,16 +174,16 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
 
             adapter = new MessageAdapter(getActivityContext(), options);
 
-
             // Scroll to bottom on new messages
             adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
-                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                    recyclerView.scrollToPosition(adapter.getItemCount()-1);
                 }
             });
-
             recyclerView.setAdapter(adapter);
+
+
         }
 
     }
