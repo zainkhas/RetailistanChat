@@ -6,6 +6,8 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.gson.Gson;
+import com.technologyleaks.retailistanchat.beans.FCMResponse;
 import com.technologyleaks.retailistanchat.beans.NotificationQueue;
 
 import java.util.List;
@@ -19,19 +21,19 @@ public class PushNotificationHelper {
     private static final String TAG = PushNotificationHelper.class.getSimpleName();
 
 
-    public static void sendAll(List<NotificationQueue> mQueue) {
+    public static void sendAll(List<NotificationQueue> mQueue, Listener listener) {
         if (mQueue == null) {
             return;
         }
 
         Log.d(TAG, "Sending " + mQueue.size() + " notifications...");
 
-        send(mQueue, 0);
+        send(mQueue, 0, listener);
 
     }
 
 
-    private static void send(List<NotificationQueue> mQueue, int index) {
+    private static void send(List<NotificationQueue> mQueue, int index, Listener listener) {
 
         Log.d(TAG, "Current index: " + index);
 
@@ -50,22 +52,36 @@ public class PushNotificationHelper {
                     public void onResponse(String response) {
                         Log.d(TAG, "FCM response: " + response);
 
-                        moveToNext(mQueue, index);
+                        try {
+                            FCMResponse fcmResponse = new Gson().fromJson(response, FCMResponse.class);
+                            if (fcmResponse != null && fcmResponse.getMessage_id().length() > 0) {
+                                listener.onSuccess(notificationQueue);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
+                        moveToNext(mQueue, index, listener);
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         anError.printStackTrace();
-                        moveToNext(mQueue, index);
+                        moveToNext(mQueue, index, listener);
                     }
                 });
     }
 
 
-    private static void moveToNext(List<NotificationQueue> mQueue, int index) {
+    private static void moveToNext(List<NotificationQueue> mQueue, int index, Listener listener) {
         if ((index + 1) < mQueue.size()) {
-            send(mQueue, index + 1);
+            send(mQueue, index + 1, listener);
         }
+    }
+
+
+    public interface Listener {
+        void onSuccess(NotificationQueue notificationQueue);
     }
 
 }

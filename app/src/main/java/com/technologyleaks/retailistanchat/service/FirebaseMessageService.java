@@ -3,6 +3,7 @@ package com.technologyleaks.retailistanchat.service;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
@@ -11,6 +12,12 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.main.view.MainActivity;
+import com.technologyleaks.retailistanchat.receivers.NotificationBroadcastReceiver;
+
+import static com.technologyleaks.retailistanchat.commons.NotificationUtil.KEY_NOTIFICATION_ID;
+import static com.technologyleaks.retailistanchat.commons.NotificationUtil.KEY_TEXT_REPLY;
+import static com.technologyleaks.retailistanchat.commons.NotificationUtil.REPLY_ACTION;
+import static com.technologyleaks.retailistanchat.commons.NotificationUtil.mNotificationId;
 
 /**
  * Created by Shahzore on 09-Feb-18.
@@ -18,10 +25,7 @@ import com.technologyleaks.retailistanchat.main.view.MainActivity;
 
 public class FirebaseMessageService extends FirebaseMessagingService {
     public static String TAG = FirebaseMessageService.class.getSimpleName();
-    private int mNotificationId = 001;
-    // Key for the string that's delivered in the action's intent.
-    private static final String KEY_TEXT_REPLY = "key_text_reply";
-    private static final int REPLY_REQUEST_CODE = 3424;
+
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -59,36 +63,39 @@ public class FirebaseMessageService extends FirebaseMessagingService {
                 new NotificationCompat.Builder(this, "group_messages_channel")
                         .setSmallIcon(R.drawable.ic_message_white_24dp_1x)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
-                        .setContentText(remoteMessage.getNotification().getBody());
+                        .setContentText(remoteMessage.getNotification().getBody())
+                        .setShowWhen(true);
 
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = null;
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // start a
+            // (i)  broadcast receiver which runs on the UI thread or
+            // (ii) service for a background task to b executed , but for the purpose of
+            // this codelab, will be doing a broadcast receiver
+            intent = new Intent(this, NotificationBroadcastReceiver.class);
+            intent.setAction(REPLY_ACTION);
+            intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);
 
-
-        // Build a PendingIntent for the reply action to trigger.
-        PendingIntent replyPendingIntent =
-                PendingIntent.getBroadcast(getApplicationContext(),
-                        REPLY_REQUEST_CODE,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-//        PendingIntent resultPendingIntent =
-//                PendingIntent.getActivity(
-//                        this,
-//                        0,
-//                        resultIntent,
-//                        PendingIntent.FLAG_UPDATE_CURRENT
-//                );
-
-        // mBuilder.setContentIntent(resultPendingIntent);
+            pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            // start your activity for Android M and below
+            intent = new Intent(this, MainActivity.class);
+            intent.setAction(REPLY_ACTION);
+            intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            pendingIntent = PendingIntent.getActivity(this, 100, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
 
         // Create the reply action and add the remote input.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
             NotificationCompat.Action action =
                     new NotificationCompat.Action.Builder(R.drawable.ic_send_black_24dp,
-                            getString(R.string.reply_label), replyPendingIntent)
+                            getString(R.string.reply_label), pendingIntent)
                             .addRemoteInput(remoteInput)
                             .build();
             mBuilder.addAction(action);

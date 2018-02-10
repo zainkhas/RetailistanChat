@@ -36,4 +36,9 @@ public class NotificationQueueTableHelper {
         return appDatabase.notificationQueueDao().getAll();
     }
 
+
+    public void delete(NotificationQueue notificationQueue) {
+        appDatabase.notificationQueueDao().delete(notificationQueue);
+    }
+
 }
