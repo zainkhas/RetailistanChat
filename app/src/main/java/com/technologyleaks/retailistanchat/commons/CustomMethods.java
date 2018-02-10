@@ -1,6 +1,8 @@
 package com.technologyleaks.retailistanchat.commons;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.view.inputmethod.InputMethodManager;
 
@@ -37,6 +39,14 @@ public class CustomMethods {
                 });
             }
         }, 1);
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            return cm.getActiveNetworkInfo() != null;
+        }
+        return false;
     }
 
 

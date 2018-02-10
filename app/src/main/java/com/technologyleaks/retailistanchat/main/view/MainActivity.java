@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
 import com.technologyleaks.retailistanchat.base.view.BaseActivity;
@@ -51,6 +52,8 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("alerts");
 
         setUpViews();
         setUpMVP();
