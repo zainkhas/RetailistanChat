@@ -44,7 +44,13 @@ public class MessageSender {
 
                                 table.addNotificationQueue(queue);
 
-                                PushNotificationHelper.sendAll(table.getAll(), table::delete);
+                                PushNotificationHelper.sendAll(table.getAll(), (notificationQueue -> {
+                                    Flowable.just(notificationQueue)
+                                            .subscribeOn(Schedulers.io())
+                                            .subscribe(queue1 -> {
+                                                table.delete(queue);
+                                            });
+                                }));
                             });
 
                 }

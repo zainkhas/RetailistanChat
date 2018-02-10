@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.technologyleaks.retailistanchat.MyApplication;
 import com.technologyleaks.retailistanchat.commons.MessageSender;
+import com.technologyleaks.retailistanchat.commons.NotificationUtil;
 import com.technologyleaks.retailistanchat.dao.AppDatabase;
 import com.technologyleaks.retailistanchat.dao.NotificationQueueTableHelper;
 
@@ -36,15 +37,18 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
 
             if (message != null && message.length() > 0) {
-                AppDatabase appDatabase = ((MyApplication) context).getAppDatabase();
+                AppDatabase appDatabase = ((MyApplication) context.getApplicationContext()).getAppDatabase();
 
                 MessageSender.send(
                         context,
                         message.toString(),
                         new NotificationQueueTableHelper(appDatabase)
                 );
+
+
             }
 
+            NotificationUtil.cancelNotification(context);
 
         }
     }

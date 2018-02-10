@@ -28,4 +28,10 @@ public class NotificationUtil {
         notificationManager.notify(mNotificationId, builder.build());
     }
 
+
+    public static void cancelNotification(Context context) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.cancel(mNotificationId);
+    }
+
 }
