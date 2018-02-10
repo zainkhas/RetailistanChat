@@ -21,24 +21,16 @@ public class CustomMethods {
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
     public static void hideSoftKeyboardDialogDismiss(final Activity activity) {
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                activity.runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        InputMethodManager inputMethodManager = (InputMethodManager) activity
-                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        if (null != activity.getCurrentFocus()) {
-                            inputMethodManager.hideSoftInputFromWindow(activity
-                                    .getCurrentFocus().getWindowToken(), 0);
-                        }
-                    }
-                });
+        new Handler().postDelayed(() -> activity.runOnUiThread(() -> {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (null != activity.getCurrentFocus()) {
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(activity
+                            .getCurrentFocus().getWindowToken(), 0);
+                }
             }
-        }, 1);
+        }), 1);
     }
 
     public static boolean isNetworkConnected(Context context) {

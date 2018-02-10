@@ -25,8 +25,7 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
     private static final String TAG = MainPresenter.class.getSimpleName();
 
     private static final Query sChatQuery =
-            FirebaseDatabase.getInstance().getReference().child(Message.TABLENAME).limitToLast(50);
-
+            FirebaseDatabase.getInstance().getReference().child(Message.TABLENAME).limitToLast(100);
 
     private MessageAdapter adapter;
 
@@ -179,7 +178,7 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
             adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
-                    recyclerView.scrollToPosition(adapter.getItemCount()-1);
+                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                 }
             });
             recyclerView.setAdapter(adapter);
@@ -200,12 +199,12 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
 
     @Override
     public void takeOnline() {
-
+        mModel.takeOnline();
     }
 
     @Override
     public void takeOffline() {
-
+        mModel.takeOffline();
     }
 
 }

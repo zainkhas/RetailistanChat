@@ -34,7 +34,7 @@ public class RegisterModel implements MVP_Register.PresenterToModel {
      */
     public RegisterModel(MVP_Register.ModelToPresenter presenter) {
         this.mPresenter = presenter;
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(User.TABLENAME);
+        this.mDatabase = FirebaseDatabase.getInstance().getReference().child(User.TABLENAME);
 
     }
 

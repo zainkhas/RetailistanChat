@@ -11,6 +11,7 @@ public class NetworkConstants {
 
     public static final String PARAM_TITLE = "title";
     public static final String PARAM_MESSAGE = "message";
+    public static final String PARAM_USER_ID = "userId";
 
 
 }

@@ -83,5 +83,9 @@ public interface MVP_Main {
 
         void sendMessage(String message);
 
+        void takeOnline();
+
+        void takeOffline();
+
     }
 }

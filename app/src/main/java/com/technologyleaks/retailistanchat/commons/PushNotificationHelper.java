@@ -45,6 +45,7 @@ public class PushNotificationHelper {
         AndroidNetworking.post(NetworkConstants.URL_FCM)
                 .addBodyParameter(NetworkConstants.PARAM_MESSAGE, notificationQueue.getMessage())
                 .addBodyParameter(NetworkConstants.PARAM_TITLE, notificationQueue.getUsername())
+                .addBodyParameter(NetworkConstants.PARAM_USER_ID, SharedPrefs.getUserId())
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsString(new StringRequestListener() {
