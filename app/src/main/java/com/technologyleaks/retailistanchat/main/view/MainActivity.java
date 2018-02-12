@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseMessaging.getInstance().subscribeToTopic("alerts");
 
         setUpViews();
         setUpMVP();
