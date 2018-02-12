@@ -24,7 +24,6 @@ import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
 import com.technologyleaks.retailistanchat.base.view.BaseActivity;
 import com.technologyleaks.retailistanchat.commons.CustomMethods;
-import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
 import com.technologyleaks.retailistanchat.main.helpers.ActivityFragmentContract;
@@ -54,7 +53,7 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     @BindView(R.id.recyclerView)
     protected RecyclerView recyclerView;
     private TextView textView_onlineUsers;
-    private BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
+    private BottomSheetFragment bottomSheetFragment;
 
 
     @Override
@@ -68,6 +67,7 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseMessaging.getInstance().subscribeToTopic("alerts");
 
         setUpViews();
         setUpMVP();
@@ -88,21 +88,14 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected void onStart() {
         super.onStart();
         mPresenter.takeOnline();
-        SharedPrefs.setIsActivityOn(true);
     }
 
     @Override
     protected void onStop() {
-        mPresenter.takeOffline();
-        SharedPrefs.setIsActivityOn(false);
         super.onStop();
+        mPresenter.takeOffline();
     }
 
-    @Override
-    protected void onPause() {
-        mPresenter.takeOffline();
-        super.onPause();
-    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -231,8 +224,15 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
 
     @Override
     public void updateOnlineUserCount(long count) {
-        textView_onlineUsers.setText(count + " online");
-        bottomSheetFragment.updateTitle(count + " Online Users");
+
+        if (textView_onlineUsers != null) {
+            textView_onlineUsers.setText(count + " online");
+        }
+
+        if (bottomSheetFragment != null) {
+            bottomSheetFragment.updateTitle(count + " Online Users");
+        }
+
     }
 
 
@@ -246,6 +246,7 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         switch (v.getId()) {
             case R.id.layout_onlineUsers:
 
+                bottomSheetFragment = new BottomSheetFragment();
                 bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
 
 

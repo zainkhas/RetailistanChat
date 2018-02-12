@@ -3,6 +3,7 @@ package com.technologyleaks.retailistanchat;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.ContextWrapper;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.androidnetworking.AndroidNetworking;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,6 +35,7 @@ public class MyApplication extends Application {
 
         appDatabase = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "RetailistanChat.db").build();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
 
