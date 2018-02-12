@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.technologyleaks.retailistanchat.R;
+import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.main.view.MainActivity;
 import com.technologyleaks.retailistanchat.receivers.NotificationBroadcastReceiver;
 
@@ -58,51 +59,51 @@ public class FirebaseMessageService extends FirebaseMessagingService {
                     .build();
         }
 
+        if (!SharedPrefs.isActivityOn() && !SharedPrefs.getUserName().equals(remoteMessage.getData().get("userId"))) {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this, "group_messages_channel")
+                            .setSmallIcon(R.drawable.ic_message_white_24dp_1x)
+                            .setContentTitle(remoteMessage.getData().get("title"))
+                            .setContentText(remoteMessage.getData().get("body"))
+                            .setShowWhen(true);
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this, "group_messages_channel")
-                        .setSmallIcon(R.drawable.ic_message_white_24dp_1x)
-                        .setContentTitle(remoteMessage.getData().get("title"))
-                        .setContentText(remoteMessage.getData().get("body"))
-                        .setShowWhen(true);
+
+            PendingIntent pendingIntent = null;
+            Intent intent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                intent = new Intent(this, NotificationBroadcastReceiver.class);
+                intent.setAction(REPLY_ACTION);
+                intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);
+
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                // start your activity for Android M and below
+                intent = new Intent(this, MainActivity.class);
+                intent.setAction(REPLY_ACTION);
+                intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                pendingIntent = PendingIntent.getActivity(this, 100, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+            }
 
 
-        PendingIntent pendingIntent = null;
-        Intent intent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // Create the reply action and add the remote input.
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+                NotificationCompat.Action action =
+                        new NotificationCompat.Action.Builder(R.drawable.ic_send_black_24dp,
+                                getString(R.string.reply_label), pendingIntent)
+                                .addRemoteInput(remoteInput)
+                                .build();
+                mBuilder.addAction(action);
+            }
 
-            intent = new Intent(this, NotificationBroadcastReceiver.class);
-            intent.setAction(REPLY_ACTION);
-            intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);
 
-            pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-        } else {
-            // start your activity for Android M and below
-            intent = new Intent(this, MainActivity.class);
-            intent.setAction(REPLY_ACTION);
-            intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            pendingIntent = PendingIntent.getActivity(this, 100, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+            if (mNotifyMgr != null) {
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            }
+
         }
-
-
-        // Create the reply action and add the remote input.
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
-            NotificationCompat.Action action =
-                    new NotificationCompat.Action.Builder(R.drawable.ic_send_black_24dp,
-                            getString(R.string.reply_label), pendingIntent)
-                            .addRemoteInput(remoteInput)
-                            .build();
-            mBuilder.addAction(action);
-        }
-
-
-        if (mNotifyMgr != null) {
-            mNotifyMgr.notify(mNotificationId, mBuilder.build());
-        }
-
-
     }
 }

@@ -24,6 +24,7 @@ import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.base.presenter.BasePresenter;
 import com.technologyleaks.retailistanchat.base.view.BaseActivity;
 import com.technologyleaks.retailistanchat.commons.CustomMethods;
+import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
 import com.technologyleaks.retailistanchat.main.helpers.ActivityFragmentContract;
@@ -67,7 +68,6 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseMessaging.getInstance().subscribeToTopic("alerts");
 
         setUpViews();
         setUpMVP();
@@ -88,11 +88,13 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected void onStart() {
         super.onStart();
         mPresenter.takeOnline();
+        SharedPrefs.setIsActivityOn(true);
     }
 
     @Override
     protected void onStop() {
         mPresenter.takeOffline();
+        SharedPrefs.setIsActivityOn(false);
         super.onStop();
     }
 

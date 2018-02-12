@@ -12,6 +12,7 @@ public class SharedPrefs {
     private static final String IS_LOGGED_IN = "IS_LOGGED_IN";
     private static final String USER_ID = "USER_ID";
     private static final String USER_NAME = "USER_NAME";
+    private static final String IS_ACTIVITY_ON = "IS_ACTIVITY_ON";
 
 
     public static boolean isLoggedIn() {
@@ -37,6 +38,14 @@ public class SharedPrefs {
 
     public static void setUserName(String value) {
         Prefs.putString(USER_NAME, value);
+    }
+
+    public static boolean isActivityOn() {
+        return Prefs.getBoolean(IS_ACTIVITY_ON, false);
+    }
+
+    public static void setIsActivityOn(boolean value) {
+        Prefs.putBoolean(IS_ACTIVITY_ON, value);
     }
 
 }

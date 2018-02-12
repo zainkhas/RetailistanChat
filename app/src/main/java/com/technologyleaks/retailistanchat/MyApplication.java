@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 
 import com.androidnetworking.AndroidNetworking;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.technologyleaks.retailistanchat.dao.AppDatabase;
 
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseMessaging.getInstance().subscribeToTopic("alerts");
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         new Prefs.Builder()
                 .setContext(this)
