@@ -38,10 +38,10 @@ public class FirebaseMessageService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
+//        // Check if message contains a notification payload.
+//        if (remoteMessage.getNotification() != null) {
+//            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+//        }
 
 
         NotificationManager mNotifyMgr =
@@ -62,18 +62,15 @@ public class FirebaseMessageService extends FirebaseMessagingService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, "group_messages_channel")
                         .setSmallIcon(R.drawable.ic_message_white_24dp_1x)
-                        .setContentTitle(remoteMessage.getNotification().getTitle())
-                        .setContentText(remoteMessage.getNotification().getBody())
+                        .setContentTitle(remoteMessage.getData().get("title"))
+                        .setContentText(remoteMessage.getData().get("body"))
                         .setShowWhen(true);
 
 
         PendingIntent pendingIntent = null;
         Intent intent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // start a
-            // (i)  broadcast receiver which runs on the UI thread or
-            // (ii) service for a background task to b executed , but for the purpose of
-            // this codelab, will be doing a broadcast receiver
+
             intent = new Intent(this, NotificationBroadcastReceiver.class);
             intent.setAction(REPLY_ACTION);
             intent.putExtra(KEY_NOTIFICATION_ID, mNotificationId);

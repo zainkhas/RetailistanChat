@@ -29,6 +29,7 @@ public class MainModel implements MVP_Main.PresenterToModel {
     private DatabaseReference mDatabase;
     private NotificationQueueTableHelper notificationQueueTableHelper;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private OnlineUsers onlineUsers;
 
 
     /**
@@ -39,6 +40,7 @@ public class MainModel implements MVP_Main.PresenterToModel {
     public MainModel(MVP_Main.ModelToPresenter presenter) {
         this.mPresenter = presenter;
         this.mDatabase = FirebaseDatabase.getInstance().getReference().child(OnlineUsers.TABLENAME);
+        this.mDatabase.keepSynced(true);
         this.notificationQueueTableHelper = new NotificationQueueTableHelper(((MyApplication) mPresenter.getAppContext()).getAppDatabase());
     }
 
@@ -68,6 +70,14 @@ public class MainModel implements MVP_Main.PresenterToModel {
                 message,
                 notificationQueueTableHelper
         );
+
+
+        if (onlineUsers != null) {
+            //update last activity time
+            onlineUsers.setLast_update_time(String.valueOf(System.currentTimeMillis()));
+            mDatabase.child(onlineUsers.getKey()).setValue(onlineUsers);
+        }
+
         mPresenter.onMessageSend();
 
     }
@@ -85,8 +95,6 @@ public class MainModel implements MVP_Main.PresenterToModel {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                OnlineUsers thisUser = null;
-                String userId = null;
 
                 ArrayList<OnlineUsers> mOnlineUsers = new ArrayList<>();
 
@@ -101,17 +109,18 @@ public class MainModel implements MVP_Main.PresenterToModel {
 
                 if (mOnlineUsers.size() > 0) {
                     //This user is already online
-                    thisUser = mOnlineUsers.get(0);
+                    onlineUsers = mOnlineUsers.get(0);
+
                 } else {
-                    userId = mDatabase.push().getKey();
-                    thisUser = new OnlineUsers();
-                    thisUser.setKey(userId);
+                    String onlineUserKey = mDatabase.push().getKey();
+                    onlineUsers = new OnlineUsers();
+                    onlineUsers.setKey(onlineUserKey);
 
                 }
 
-                thisUser.setUsername(SharedPrefs.getUserName());
-                thisUser.setLast_update_time(String.valueOf(System.currentTimeMillis()));
-                mDatabase.child(thisUser.getKey()).setValue(thisUser);
+                onlineUsers.setUsername(SharedPrefs.getUserName());
+                onlineUsers.setLast_update_time(String.valueOf(System.currentTimeMillis()));
+                mDatabase.child(onlineUsers.getKey()).setValue(onlineUsers);
             }
 
             @Override
@@ -124,7 +133,27 @@ public class MainModel implements MVP_Main.PresenterToModel {
 
     @Override
     public void takeOffline() {
+        if (onlineUsers != null) {
+            mDatabase.child(onlineUsers.getKey()).removeValue();
+        }
+    }
 
+    @Override
+    public void getOnlineUsersCount() {
+        Query onlineCheckQuery = FirebaseDatabase.getInstance().getReference()
+                .child(OnlineUsers.TABLENAME);
+        onlineCheckQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long onlineCount = dataSnapshot.getChildrenCount();
+                mPresenter.onOnlineCountUpdate(onlineCount);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

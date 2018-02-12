@@ -8,7 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -60,7 +60,7 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdap
         @BindView(R.id.textView_time)
         TextView textView_time;
         @BindView(R.id.layout_innerContainer)
-        RelativeLayout layout_innerContainer;
+        LinearLayout layout_innerContainer;
 
 
         MessageViewHolder(View itemView) {
@@ -71,21 +71,24 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageAdap
         void bind(Message message) {
             String current_user = SharedPrefs.getUserId();
 
+
             if (message.getUserId().equals(current_user)) {
                 layout_innerContainer.setGravity(Gravity.END);
                 textView_message.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_bubble_sent));
                 textView_message.setTextColor(ContextCompat.getColor(context, R.color.colorLightText));
                 textView_userName.setVisibility(View.GONE);
 
+
             } else {
                 layout_innerContainer.setGravity(Gravity.START);
                 textView_message.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_bubble_received));
                 textView_message.setTextColor(ContextCompat.getColor(context, android.R.color.white));
                 textView_userName.setVisibility(View.VISIBLE);
+
+
             }
 
 
-            textView_userName.setText(message.getSenderName());
             textView_userName.setText(message.getSenderName());
             textView_time.setText(CustomMethods.getTimeAgo(Long.valueOf(message.getTime())));
             textView_message.setText(message.getText());

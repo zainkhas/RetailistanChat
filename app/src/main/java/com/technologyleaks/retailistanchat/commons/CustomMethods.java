@@ -69,4 +69,33 @@ public class CustomMethods {
         }
 
     }
+
+
+    public static String getLastActivityTimeAgo(long time) {
+
+        //if timestamp given in seconds, convert to millis time *= 1000; }
+        long now = System.currentTimeMillis();
+        if (time > now || time <= 0) {
+            return "";
+        }
+
+        long diff = now - time;
+
+        if (diff < MINUTE_MILLIS) {
+            return "Active now";
+        } else if (diff < 2 * MINUTE_MILLIS) {
+            return "1 min ago";
+        } else if (diff < 50 * MINUTE_MILLIS) {
+            return diff / MINUTE_MILLIS + " mins ago";
+        } else if (diff < 90 * MINUTE_MILLIS) {
+            return "1 hour ago";
+        } else if (diff < 24 * HOUR_MILLIS) {
+            return diff / HOUR_MILLIS + " hours ago";
+        } else if (diff < 48 * HOUR_MILLIS) {
+            return "Yesterday";
+        } else {
+            return new SimpleDateFormat("d/M/yy", Locale.US).format(new Date(time));
+        }
+
+    }
 }

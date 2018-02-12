@@ -11,7 +11,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.technologyleaks.retailistanchat.R;
 import com.technologyleaks.retailistanchat.adapters.MessageAdapter;
+import com.technologyleaks.retailistanchat.adapters.OnlineUsersAdapter;
 import com.technologyleaks.retailistanchat.beans.Message;
+import com.technologyleaks.retailistanchat.beans.OnlineUsers;
 import com.technologyleaks.retailistanchat.commons.Navigator;
 import com.technologyleaks.retailistanchat.commons.SharedPrefs;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
@@ -24,10 +26,12 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
 
     private static final String TAG = MainPresenter.class.getSimpleName();
 
-    private static final Query sChatQuery =
-            FirebaseDatabase.getInstance().getReference().child(Message.TABLENAME).limitToLast(100);
+    private Query messagesQuery;
 
-    private MessageAdapter adapter;
+    private Query onlineUsersQuery;
+
+    private MessageAdapter messagesAdapter;
+    private OnlineUsersAdapter onlineUsersAdapter;
 
 
     // View reference. We use as a WeakReference
@@ -44,6 +48,14 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
      */
     public MainPresenter(MVP_Main.PresenterToView view) {
         mView = new WeakReference<>(view);
+        this.messagesQuery = FirebaseDatabase.getInstance().getReference().child(Message.TABLENAME)
+                .limitToLast(100);
+        this.messagesQuery.keepSynced(true);
+
+        this.onlineUsersQuery = FirebaseDatabase.getInstance().getReference().child(OnlineUsers.TABLENAME)
+                .limitToLast(100);
+        this.onlineUsersQuery.keepSynced(true);
+
     }
 
     /**
@@ -140,6 +152,11 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
         getView().clearMessage();
     }
 
+    @Override
+    public void onOnlineCountUpdate(long count) {
+        getView().updateOnlineUserCount(count);
+    }
+
 
     /**
      * Custom Methods
@@ -165,23 +182,23 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
     @Override
     public void populateRecyclerView(final RecyclerView recyclerView, LifecycleOwner lifecycleOwner) {
 
-        if (adapter == null) {
+        if (messagesAdapter == null) {
             FirebaseRecyclerOptions<Message> options =
                     new FirebaseRecyclerOptions.Builder<Message>()
-                            .setQuery(sChatQuery, Message.class)
+                            .setQuery(messagesQuery, Message.class)
                             .setLifecycleOwner(lifecycleOwner)
                             .build();
 
-            adapter = new MessageAdapter(getActivityContext(), options);
+            messagesAdapter = new MessageAdapter(getActivityContext(), options);
 
             // Scroll to bottom on new messages
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            messagesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
-                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                    recyclerView.scrollToPosition(messagesAdapter.getItemCount() - 1);
                 }
             });
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(messagesAdapter);
 
 
         }
@@ -205,6 +222,31 @@ public class MainPresenter implements MVP_Main.ViewToPresenter, MVP_Main.ModelTo
     @Override
     public void takeOffline() {
         mModel.takeOffline();
+    }
+
+    @Override
+    public void getOnlineUsersCount() {
+        mModel.getOnlineUsersCount();
+    }
+
+    @Override
+    public void populateOnlineUsersRecyclerView(RecyclerView recyclerView, LifecycleOwner lifecycleOwner) {
+        FirebaseRecyclerOptions<OnlineUsers> options =
+                new FirebaseRecyclerOptions.Builder<OnlineUsers>()
+                        .setQuery(onlineUsersQuery, OnlineUsers.class)
+                        .setLifecycleOwner(lifecycleOwner)
+                        .build();
+
+        onlineUsersAdapter = new OnlineUsersAdapter(getActivityContext(), options);
+
+        // Scroll to bottom on new messages
+        onlineUsersAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                recyclerView.scrollToPosition(onlineUsersAdapter.getItemCount() - 1);
+            }
+        });
+        recyclerView.setAdapter(onlineUsersAdapter);
     }
 
 }

@@ -32,6 +32,7 @@ public interface MVP_Main {
 
         void clearMessage();
 
+        void updateOnlineUserCount(long count);
 
     }
 
@@ -57,6 +58,10 @@ public interface MVP_Main {
 
         void takeOffline();
 
+        void getOnlineUsersCount();
+
+        void populateOnlineUsersRecyclerView(RecyclerView recyclerView, LifecycleOwner lifecycleOwner);
+
     }
 
     /**
@@ -70,6 +75,8 @@ public interface MVP_Main {
         Context getActivityContext();
 
         void onMessageSend();
+
+        void onOnlineCountUpdate(long count);
     }
 
     /**
@@ -86,6 +93,8 @@ public interface MVP_Main {
         void takeOnline();
 
         void takeOffline();
+
+        void getOnlineUsersCount();
 
     }
 }

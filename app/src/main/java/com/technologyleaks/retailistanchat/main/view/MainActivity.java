@@ -1,6 +1,8 @@
 package com.technologyleaks.retailistanchat.main.view;
 
 import android.app.Activity;
+import android.arch.lifecycle.LifecycleOwner;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.technologyleaks.retailistanchat.R;
@@ -22,13 +26,15 @@ import com.technologyleaks.retailistanchat.base.view.BaseActivity;
 import com.technologyleaks.retailistanchat.commons.CustomMethods;
 import com.technologyleaks.retailistanchat.commons.StateMaintainer;
 import com.technologyleaks.retailistanchat.main.MVP_Main;
+import com.technologyleaks.retailistanchat.main.helpers.ActivityFragmentContract;
 import com.technologyleaks.retailistanchat.main.model.MainModel;
 import com.technologyleaks.retailistanchat.main.presnter.MainPresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.nekocode.emojix.Emojix;
 
-public class MainActivity extends BaseActivity implements MVP_Main.PresenterToView {
+public class MainActivity extends BaseActivity implements MVP_Main.PresenterToView, View.OnClickListener, ActivityFragmentContract.FragmentToActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -46,7 +52,15 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected ImageButton button_send;
     @BindView(R.id.recyclerView)
     protected RecyclerView recyclerView;
+    private TextView textView_onlineUsers;
+    private BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(Emojix.wrap(newBase));
+//        Emoji support
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +71,8 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
 
         setUpViews();
         setUpMVP();
+
+        mPresenter.getOnlineUsersCount();
 
     }
 
@@ -84,6 +100,23 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
     protected void onPause() {
         mPresenter.takeOffline();
         super.onPause();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+
+        //Get a reference to your item by id
+        MenuItem item = menu.findItem(R.id.action_online);
+
+
+        //Then you access to your control by finding it in the rootView
+        RelativeLayout onlineUsersLayout = (RelativeLayout) item.getActionView();
+        onlineUsersLayout.setOnClickListener(this);
+
+        textView_onlineUsers = onlineUsersLayout.findViewById(R.id.textView_onlineUsers);
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -190,13 +223,36 @@ public class MainActivity extends BaseActivity implements MVP_Main.PresenterToVi
         editTex_message.setText("");
         editTex_message.clearFocus();
         button_send.setClickable(false);
-        button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background));
+        button_send.setBackground(ContextCompat.getDrawable(getActivityContext(), R.drawable.send_button_background_disabled));
         CustomMethods.hideSoftKeyboardDialogDismiss(this);
+    }
+
+    @Override
+    public void updateOnlineUserCount(long count) {
+        textView_onlineUsers.setText(count + " online");
+        bottomSheetFragment.updateTitle(count + " Online Users");
     }
 
 
     @Override
     protected boolean useDrawerToggle() {
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layout_onlineUsers:
+
+                bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+
+
+                break;
+        }
+    }
+
+    @Override
+    public void populateRecyclerView(RecyclerView recyclerView, LifecycleOwner lifecycleOwner) {
+        mPresenter.populateOnlineUsersRecyclerView(recyclerView, lifecycleOwner);
     }
 }

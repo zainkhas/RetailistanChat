@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.technologyleaks.retailistanchat.main.view.MainActivity">
+
+    <item
+        android:id="@+id/action_online"
+        android:title="Online"
+        app:actionLayout="@layout/online_users_layout"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
